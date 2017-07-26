@@ -11,9 +11,9 @@ public class Main {
 	public static void main(String[] args) {
         // URL列表数组
         String[] urisToGet = {
-                "http://192.168.1.19:8080/sszjrrtf/",
-                "http://192.168.1.19:8080/sszm/",
-                "http://192.168.1.19:8080/error/"
+                "https://www.baidu.com/",
+                "http://m.sszjr.com/",
+                "https://www.sszjr.com/"
                	};
 
         long start = System.currentTimeMillis();

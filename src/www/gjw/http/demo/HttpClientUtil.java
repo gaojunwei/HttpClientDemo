@@ -13,7 +13,6 @@ import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -28,7 +27,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -107,33 +105,39 @@ public class HttpClientUtil {
         cm.setMaxTotal(maxTotal);
         //将每个路由基础的连接增加
         cm.setDefaultMaxPerRoute(maxPerRoute);
-        HttpHost httpHost = new HttpHost(hostname, port);
-        // 将目标主机的最大连接数增加
-        cm.setMaxPerRoute(new HttpRoute(httpHost), maxRoute);
+        //传递给此方法的非正数值禁用连接验证,
+        cm.setValidateAfterInactivity(1*1000);
 
         // 请求重试处理
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException exception,
                     int executionCount, HttpContext context) {
                 if (executionCount >= 5) {// 如果已经重试了5次，就放弃
+                	System.out.println("重试了："+executionCount);
                     return false;
                 }
-                if (exception instanceof NoHttpResponseException) {// 如果服务器丢掉了连接，那么就重试
+                if (exception instanceof NoHttpResponseException) {//如果服务器丢掉了连接，那么就重试
+                	logger.error("如果服务器丢掉了连接，那么就重试");
                     return true;
                 }
-                if (exception instanceof SSLHandshakeException) {// 不要重试SSL握手异常
+                if (exception instanceof SSLHandshakeException) {//不要重试SSL握手异常
+                	logger.error("不要重试SSL握手异常");
                     return false;
                 }
-                if (exception instanceof InterruptedIOException) {// 超时
+                if (exception instanceof InterruptedIOException) {//超时
+                	logger.error("超时");
                     return false;
                 }
-                if (exception instanceof UnknownHostException) {// 目标服务器不可达
+                if (exception instanceof UnknownHostException) {//目标服务器不可达
+                	logger.error("目标服务器不可达");
                     return false;
                 }
-                if (exception instanceof ConnectTimeoutException) {// 连接被拒绝
+                if (exception instanceof ConnectTimeoutException) {//连接被拒绝
+                	logger.error("连接被拒绝");
                     return false;
                 }
-                if (exception instanceof SSLException) {// SSL握手异常
+                if (exception instanceof SSLException) {//SSL握手异常
+                	logger.error("SSL握手异常");
                     return false;
                 }
 
@@ -161,7 +165,7 @@ public class HttpClientUtil {
      * @param httpRequestBase void<br/>
      * @author gjw
      */
-    private static void config(HttpRequestBase httpRequestBase) {
+    private static void config(HttpRequestBase httpRequestBase){
         // 设置Header等
         httpRequestBase.setHeader("User-Agent", "Mozilla/5.0");
         // 配置请求的超时设置

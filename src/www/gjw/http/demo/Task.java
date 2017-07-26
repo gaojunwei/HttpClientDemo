@@ -19,8 +19,8 @@ public class Task implements Runnable {
     public void run() {
         try {
         	logger.info(Thread.currentThread().getName()+"任务开始");
-        	//logger.info(HttpClientUtil.get(url));
-        	HttpClientUtil.get(url);
+        	logger.info(HttpClientUtil.get(url));
+        	//HttpClientUtil.get(url);
         	logger.info(Thread.currentThread().getName()+"任务结束");
         } finally {
             countDownLatch.countDown();
