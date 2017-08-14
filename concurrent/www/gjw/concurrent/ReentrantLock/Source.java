@@ -1,6 +1,5 @@
-package www.gjw.concurrent.test;
+package www.gjw.concurrent.ReentrantLock;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -18,6 +17,15 @@ public class Source {
 	
 	public void doSomeThing() {
 		System.out.println("AAA="+lock.getQueueLength());
+		if(lock.getQueueLength()==3)
+		{
+			System.out.println("中断执行");
+			try {
+				lock.lockInterruptibly();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		lock.lock();
 		System.out.println("获得锁");
 		System.out.println("BBB="+lock.getQueueLength());
@@ -26,8 +34,15 @@ public class Source {
 			System.out.println(Thread.currentThread().getName()+" 进入该方法");
 			System.out.println(Thread.currentThread().getName()+" do something");
 			System.out.println(Thread.currentThread().getName()+" 离开该方法");
+			doSomeThing02();
 		} finally {
 			lock.unlock();
+			System.out.println("释放锁");
 		}
 	}
+	public void doSomeThing02() {
+		lock.lock();//可重入锁（获得几次锁就必须释放几次锁）
+		System.out.println("----");
+	}
+	
 }

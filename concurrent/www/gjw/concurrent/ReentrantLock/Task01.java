@@ -1,4 +1,4 @@
-package www.gjw.concurrent.test;
+package www.gjw.concurrent.ReentrantLock;
 
 
 /**

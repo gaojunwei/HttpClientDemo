@@ -1,4 +1,4 @@
-package www.gjw.concurrent.test;
+package www.gjw.concurrent.ReentrantLock;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

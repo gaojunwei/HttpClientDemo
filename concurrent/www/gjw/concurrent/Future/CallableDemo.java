@@ -24,7 +24,7 @@ public class CallableDemo {
         Future<Integer> future3 = executorService.submit(new CallableTask01(8,10)); 
         resultList.add(future3);
 
-        System.out.println((1+2+3+4+5+6+7+8+9+10));
+        System.out.println("期望结果："+(1+2+3+4+5+6+7+8+9+10));
         
         int r = 0;
         //遍历任务的结果
@@ -38,6 +38,6 @@ public class CallableDemo {
                 executorService.shutdown();
             }
         }
-        System.out.println("计算结果是："+r);
+        System.out.println("计算结果："+r);
     }
 } 
